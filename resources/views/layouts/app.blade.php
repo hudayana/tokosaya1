@@ -18,6 +18,7 @@
     <div class="navbar">
         <a href="/">Beranda</a>
         <a href="/tentang">Tentang Kami</a>
+        <a href="/produk">Produk</a>
     </div>
 
     <!-- Ini adalah tempat di mana isi halaman akan dimasukkan -->

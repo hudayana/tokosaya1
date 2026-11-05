@@ -8,3 +8,6 @@ Route::get('/', function () {
 Route::get('/tentang', function () {
     return view('tentang');
 });
+Route::get('/produk', function () {
+    return view('produk');
+});
