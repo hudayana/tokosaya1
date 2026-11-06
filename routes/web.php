@@ -17,22 +17,18 @@ Route::get('/tentang', function () {
 });
 
 Route::get('/produk', function (Request $request) {
-    // Mulai query dasar
     $query = Produk::query();
 
-    // Jika ada input pencarian (search)
     if ($request->has('search') && $request->search != '') {
         $query->where('nama', 'like', '%' . $request->search . '%');
     }
 
-    // Jika ada filter kategori
     if ($request->has('kategori') && $request->kategori != '') {
         $query->where('kategori_id', $request->kategori);
     }
 
-    // Ambil hasilnya
     $semua_produk = $query->get();
-    $semua_kategori = Kategori::all(); // Untuk dropdown filter
+    $semua_kategori = Kategori::all(); 
 
     return view('produk', [
         'semua_produk' => $semua_produk,
@@ -40,10 +36,11 @@ Route::get('/produk', function (Request $request) {
     ]);
 });
 
-    Route::get('/produk/{id}', function ($id) {
+Route::get('/produk/{id}', function ($id) {
     $produk = Produk::findOrFail($id);
     return view('detail_produk', ['produk' => $produk]);
 })->name('produk.detail');
+
 
 // --- ROUTE KERANJANG BELANJA (Bisa diakses publik) ---
 Route::get('/keranjang', function () {
@@ -98,15 +95,14 @@ Route::post('/keranjang/update/{id}', function (Request $request, $id) {
 
 Route::middleware('auth')->group(function () {
     
-    // Profil (Bisa diakses semua user yang login)
+    // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // --- ROUTE KHUSUS ADMIN (Menggunakan Middleware 'admin') ---
+    // --- ROUTE KHUSUS ADMIN ---
     Route::middleware('admin')->group(function () {
         
-        // Dashboard
         Route::get('/dashboard', function () {
             return view('dashboard');
         })->name('dashboard');
@@ -212,9 +208,22 @@ Route::middleware('auth')->group(function () {
             return redirect('/kategori');
         });
 
-    }); // <-- Penutup grup khusus admin
+                // Halaman Riwayat Pesanan
+        Route::get('/admin/pesanan', function () {
+            $semua_pesanan = \App\Models\Pesanan::with('details')->latest()->get();
+            return view('admin.pesanan', ['semua_pesanan' => $semua_pesanan]);
+        })->name('admin.pesanan');
 
-    // --- ROUTE CHECKOUT & PEMBAYARAN (Bisa diakses semua user yang login) ---
+        // Detail Pesanan
+        Route::get('/admin/pesanan/{id}', function ($id) {
+            $pesanan = \App\Models\Pesanan::with('details')->findOrFail($id);
+            return view('admin.detail_pesanan', ['pesanan' => $pesanan]);
+        })->name('admin.pesanan.detail');
+
+    }); // Penutup grup khusus admin
+
+    // --- ROUTE CHECKOUT & PEMBAYARAN ---
+    
     Route::get('/checkout', function () {
         $keranjang = session()->get('keranjang', []);
         if (count($keranjang) == 0) {
@@ -229,10 +238,44 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/checkout/proses', function (Request $request) {
         $request->validate([
+            'nama_penerima' => 'required',
+            'no_telepon' => 'required',
+            'alamat' => 'required',
             'metode_pembayaran' => 'required|in:Transfer Bank,E-Wallet,COD,QRIS'
         ]);
 
-        session()->put('metode_pembayaran_terpilih', $request->metode_pembayaran);
+        $keranjang = session()->get('keranjang', []);
+        if (count($keranjang) == 0) {
+            return redirect('/produk')->with('error', 'Keranjang kosong.');
+        }
+
+        $total = 0;
+        foreach($keranjang as $item) {
+            $total += $item['harga'] * $item['quantity'];
+        }
+
+        // Simpan Pesanan
+        $pesanan = \App\Models\Pesanan::create([
+            'user_id' => auth()->id(),
+            'nama_penerima' => $request->nama_penerima,
+            'no_telepon' => $request->no_telepon,
+            'alamat' => $request->alamat,
+            'metode_pembayaran' => $request->metode_pembayaran,
+            'total_harga' => $total,
+            'status' => 'pending'
+        ]);
+
+        // Simpan Detail Pesanan
+        foreach($keranjang as $id => $item) {
+            \App\Models\DetailPesanan::create([
+                'pesanan_id' => $pesanan->id,
+                'produk_id' => $id,
+                'nama_produk' => $item['nama'],
+                'harga' => $item['harga'],
+                'quantity' => $item['quantity']
+            ]);
+        }
+
         session()->forget('keranjang'); 
 
         if ($request->metode_pembayaran == 'QRIS') {
