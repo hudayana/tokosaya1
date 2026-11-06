@@ -3,25 +3,60 @@
 @section('title', 'Daftar Produk')
 
 @section('content')
-    <!-- Header Halaman -->
-    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800">Katalog Produk</h1>
-            <p class="text-gray-500 mt-1">Temukan produk terbaik untuk Anda.</p>
+    <!-- Header & Form Pencarian -->
+    <div class="mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-800">Katalog Produk</h1>
+                <p class="text-gray-500 mt-1">Temukan produk terbaik untuk Anda.</p>
+            </div>
+            
+            <!-- Tombol Tambah Produk (Hanya Admin) -->
+            @if(auth()->check() && auth()->user()->role == 'admin')
+                <a href="/produk/tambah" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
+                    Tambah Produk
+                </a>
+            @endif
         </div>
-        
-        <!-- TOMBOL TAMBAH PRODUK (Hanya untuk Admin) -->
-        @if(auth()->check() && auth()->user()->role == 'admin')
-            <a href="/produk/tambah" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow-md transition duration-300 flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" /></svg>
-                Tambah Produk
-            </a>
-        @endif
+
+        <!-- FORM PENCARIAN & FILTER -->
+        <form action="/produk" method="GET" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-3">
+            <!-- Input Search -->
+            <div class="relative flex-grow">
+                <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama produk..." class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+
+            <!-- Dropdown Kategori -->
+            <select name="kategori" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white sm:w-48">
+                <option value="">Semua Kategori</option>
+                @foreach($semua_kategori as $k)
+                    <option value="{{ $k->id }}" {{ request('kategori') == $k->id ? 'selected' : '' }}>
+                        {{ $k->nama_kategori }}
+                    </option>
+                @endforeach
+            </select>
+
+            <!-- Tombol Cari & Reset -->
+            <div class="flex gap-2">
+                <button type="submit" class="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-6 rounded-lg transition">
+                    Cari
+                </button>
+                @if(request('search') || request('kategori'))
+                    <a href="/produk" class="bg-gray-100 hover:bg-gray-200 text-gray-600 font-semibold py-2 px-4 rounded-lg transition flex items-center justify-center" title="Reset Pencarian">
+                        &times;
+                    </a>
+                @endif
+            </div>
+        </form>
     </div>
     
     <!-- Grid Produk -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-        @foreach($semua_produk as $p)
+        @forelse($semua_produk as $p)
             <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col">
                 
                 <!-- Bagian Gambar -->
@@ -29,7 +64,6 @@
                     @if($p->gambar)
                         <img src="{{ asset('images/' . $p->gambar) }}" alt="{{ $p->nama }}" class="w-full h-full object-cover">
                     @else
-                        <!-- Placeholder Modern jika tidak ada gambar -->
                         <div class="flex items-center justify-center w-full h-full text-gray-400">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -51,7 +85,7 @@
                         Rp {{ number_format($p->harga, 0, ',', '.') }}
                     </div>
 
-                    <!-- Tombol Tambah ke Keranjang (Bisa diakses publik) -->
+                    <!-- Tombol Tambah ke Keranjang -->
                     <form action="{{ route('keranjang.tambah', $p->id) }}" method="POST" class="mt-auto">
                         @csrf
                         <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 rounded-lg transition duration-300 flex items-center justify-center gap-2">
@@ -60,7 +94,7 @@
                         </button>
                     </form>
                     
-                    <!-- TOMBOL EDIT & HAPUS (Hanya untuk Admin) -->
+                    <!-- Tombol Edit & Hapus (Hanya Admin) -->
                     @if(auth()->check() && auth()->user()->role == 'admin')
                         <div class="flex gap-3 mt-3">
                             <a href="/produk/{{ $p->id }}/edit" class="flex-1 text-center bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 rounded-lg transition duration-300">
@@ -78,6 +112,16 @@
                     @endif
                 </div>
             </div>
-        @endforeach
+        @empty
+            <!-- Pesan Jika Produk Tidak Ditemukan -->
+            <div class="col-span-full bg-white rounded-2xl shadow-sm border border-gray-100 p-16 text-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-300 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <h3 class="text-xl font-bold text-gray-700 mb-2">Produk Tidak Ditemukan</h3>
+                <p class="text-gray-500">Maaf, kami tidak menemukan produk yang sesuai dengan pencarian Anda.</p>
+                <a href="/produk" class="inline-block mt-4 text-blue-600 hover:underline font-semibold">Lihat Semua Produk</a>
+            </div>
+        @endforelse
     </div>
 @endsection

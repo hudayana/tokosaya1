@@ -16,9 +16,28 @@ Route::get('/tentang', function () {
     return view('tentang');
 });
 
-Route::get('/produk', function () {
-    $semua_produk = Produk::all(); 
-    return view('produk', ['semua_produk' => $semua_produk]);
+Route::get('/produk', function (Request $request) {
+    // Mulai query dasar
+    $query = Produk::query();
+
+    // Jika ada input pencarian (search)
+    if ($request->has('search') && $request->search != '') {
+        $query->where('nama', 'like', '%' . $request->search . '%');
+    }
+
+    // Jika ada filter kategori
+    if ($request->has('kategori') && $request->kategori != '') {
+        $query->where('kategori_id', $request->kategori);
+    }
+
+    // Ambil hasilnya
+    $semua_produk = $query->get();
+    $semua_kategori = Kategori::all(); // Untuk dropdown filter
+
+    return view('produk', [
+        'semua_produk' => $semua_produk,
+        'semua_kategori' => $semua_kategori
+    ]);
 });
 
 
