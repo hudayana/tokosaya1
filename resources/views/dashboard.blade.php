@@ -10,8 +10,10 @@
             <p class="text-gray-500">Selamat datang kembali, <span class="font-semibold text-blue-600">{{ Auth::user()->name }}</span>!</p>
         </div>
 
-        <!-- Kartu Statistik -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Kartu Statistik & Aksi Cepat -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Kartu 1: Total Produk -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Total Produk</p>
@@ -24,6 +26,20 @@
                 </div>
             </div>
 
+            <!-- Kartu 2: Total Kategori -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
+                <div>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Total Kategori</p>
+                    <h3 class="text-2xl font-bold text-gray-800">{{ \App\Models\Kategori::count() }}</h3>
+                </div>
+                <div class="bg-yellow-50 text-yellow-600 p-3 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Kartu 3: Aksi Cepat Tambah Produk -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
                 <div>
                     <p class="text-sm font-medium text-gray-500 mb-1">Aksi Cepat</p>
@@ -36,18 +52,25 @@
                 </div>
             </div>
 
+            <!-- Kartu 4: Kelola Kategori -->
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
                 <div>
-                    <p class="text-sm font-medium text-gray-500 mb-1">Lihat Katalog</p>
-                    <a href="/produk" class="text-blue-600 font-semibold hover:underline">Buka Halaman Produk &rarr;</a>
+                    <p class="text-sm font-medium text-gray-500 mb-1">Kelola Kategori</p>
+                    <a href="/kategori" class="text-blue-600 font-semibold hover:underline">Buka Kategori &rarr;</a>
                 </div>
                 <div class="bg-purple-50 text-purple-600 p-3 rounded-full">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                     </svg>
                 </div>
             </div>
+        </div>
+        
+        <!-- Tombol Lihat Katalog (Full Width) -->
+        <div class="mt-6">
+            <a href="/produk" class="block w-full text-center bg-white border border-gray-200 hover:bg-gray-50 text-gray-700 font-semibold py-3 rounded-xl shadow-sm transition duration-300">
+                Lihat Halaman Katalog Produk &rarr;
+            </a>
         </div>
     </div>
 @endsection

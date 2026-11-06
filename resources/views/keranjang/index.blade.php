@@ -81,10 +81,10 @@
                             <span class="text-2xl font-extrabold text-blue-600">Rp {{ number_format($total, 0, ',', '.') }}</span>
                         </div>
 
-                        <button onclick="alert('Fitur Checkout belum tersedia di versi ini.')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition duration-300 flex items-center justify-center gap-2">
-                            Lanjut ke Pembayaran
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
-                        </button>
+                        <a href="{{ route('checkout.index') }}" class="w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-md transition duration-300 flex items-center justify-center gap-2">
+    Lanjut ke Pembayaran
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>
+</a>
                         
                         <a href="/produk" class="block text-center mt-4 text-gray-500 hover:text-blue-600 text-sm font-medium transition">Lanjut Belanja</a>
                     </div>

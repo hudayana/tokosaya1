@@ -35,18 +35,21 @@
                     </a>
                     
                     <!-- BLOK AUTENTIKASI -->
-                    @auth
-                        <!-- Tampil jika sudah login -->
-                        <a href="/dashboard" class="text-gray-600 hover:text-blue-600 font-medium transition">Dashboard</a>
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition">Logout</button>
-                        </form>
-                    @else
-                        <!-- Tampil jika belum login -->
-                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-blue-600 font-medium transition">Login</a>
-                        <!-- Tombol Register sudah dihapus sesuai instruksi sebelumnya -->
-                    @endauth
+                   @auth
+    <!-- Menu Dashboard HANYA untuk Admin -->
+    @if(auth()->user()->role == 'admin')
+        <a href="/dashboard" class="text-gray-600 hover:text-blue-600 font-medium transition">Dashboard</a>
+    @endif
+    
+    <!-- Tombol Logout untuk semua user yang login -->
+    <form method="POST" action="{{ route('logout') }}" class="inline">
+        @csrf
+        <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition">Logout</button>
+    </form>
+@else
+    <!-- Tampil jika belum login -->
+    <a href="{{ route('login') }}" class="text-gray-600 hover:text-blue-600 font-medium transition">Login</a>
+@endauth
                 </div>
             </div>
         </div>
