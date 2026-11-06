@@ -1,33 +1,50 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toko Saya - @yield('title')</title>
-        <title>Toko Saya - @yield('title')</title>
-    <!-- Tambahkan baris Bootstrap ini -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f3f4f6; }
-        .navbar { background-color: #1f2937; padding: 15px 30px; display: flex; gap: 20px; }
-        .navbar a { color: white; text-decoration: none; font-weight: bold; }
-        .navbar a:hover { color: #ff2d20; }
-        .container { max-width: 800px; margin: 40px auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-    </style>
+    
+    <!-- Script Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
 
-    <!-- Ini adalah Navbar yang akan muncul di semua halaman -->
-    <div class="navbar">
-        <a href="/">Beranda</a>
-        <a href="/tentang">Tentang Kami</a>
-        <a href="/produk">Produk</a>
-    </div>
+    <!-- Navbar Modern -->
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center">
+                    <a href="/" class="text-2xl font-black text-blue-600 tracking-tighter">Toko Saya.</a>
+                </div>
+                <!-- Menu -->
+                <div class="flex space-x-8 items-center">
+                    <a href="/" class="text-gray-600 hover:text-blue-600 font-medium transition">Beranda</a>
+                    <a href="/tentang" class="text-gray-600 hover:text-blue-600 font-medium transition">Tentang Kami</a>
+                    <a href="/produk" class="text-gray-600 hover:text-blue-600 font-medium transition">Produk</a>
+                    
+                    @auth
+                        <!-- Tampil jika sudah login -->
+                        <a href="/dashboard" class="text-gray-600 hover:text-blue-600 font-medium transition">Dashboard</a>
+                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                            @csrf
+                            <button type="submit" class="text-red-500 hover:text-red-700 font-medium transition">Logout</button>
+                        </form>
+                    @else
+                        <!-- Tampil jika belum login -->
+                        <a href="{{ route('login') }}" class="text-gray-600 hover:text-blue-600 font-medium transition">Login</a>
+                        <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Register</a>
+                    @endauth
+                </div>
+            </div>
+        </div>
+    </nav>
 
-    <!-- Ini adalah tempat di mana isi halaman akan dimasukkan -->
-    <div class="container">
+    <!-- Konten Utama -->
+    <main class="max-w-7xl mx-auto py-10 px-4 sm:px-6 lg:px-8">
         @yield('content')
-    </div>
+    </main>
 
 </body>
 </html>

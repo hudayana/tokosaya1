@@ -1,8 +1,11 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Produk;
 use Illuminate\Http\Request;
+
+// --- ROUTE PUBLIK (Bisa diakses tanpa login) ---
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,79 +20,92 @@ Route::get('/produk', function () {
     return view('produk', ['semua_produk' => $semua_produk]);
 });
 
-// Menampilkan halaman form tambah
-Route::get('/produk/tambah', function () {
-    return view('tambah_produk');
-});
 
-// Memproses data dari form (Tambah Produk & Upload Gambar)
-Route::post('/produk/simpan', function (Request $request) {
+// --- ROUTE ADMIN (Wajib Login) ---
+
+Route::middleware('auth')->group(function () {
     
-    $request->validate([
-        'nama' => 'required',
-        'harga' => 'required|numeric',
-        'deskripsi' => 'nullable',
-        'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' 
-    ]);
+    // Dashboard bawaan Breeze
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-    $nama_gambar = null;
-    if ($request->hasFile('gambar')) {
-        $file = $request->file('gambar');
-        $nama_gambar = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('images'), $nama_gambar); 
-    }
+    // Profil bawaan Breeze
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Produk::create([
-        'nama' => $request->nama,
-        'harga' => $request->harga,
-        'deskripsi' => $request->deskripsi,
-        'gambar' => $nama_gambar,
-    ]);
+    // --- ROUTE TOKO SAYA (CRUD) ---
+    
+    Route::get('/produk/tambah', function () {
+        return view('tambah_produk');
+    });
 
-    return redirect('/produk');
-});
+    Route::post('/produk/simpan', function (Request $request) {
+        $request->validate([
+            'nama' => 'required',
+            'harga' => 'required|numeric',
+            'deskripsi' => 'nullable',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' 
+        ]);
 
-// Route untuk menghapus produk
-Route::delete('/produk/{id}', function ($id) {
-    $produk = Produk::findOrFail($id);
-    $produk->delete();
-    return redirect('/produk');
-});
-
-// Route untuk menampilkan form edit
-Route::get('/produk/{id}/edit', function ($id) {
-    $produk = Produk::findOrFail($id);
-    return view('edit_produk', ['produk' => $produk]);
-});
-
-// Route untuk memproses update data (Edit Produk)
-Route::put('/produk/{id}', function (Request $request, $id) {
-    $request->validate([
-        'nama' => 'required',
-        'harga' => 'required|numeric',
-        'deskripsi' => 'nullable',
-        'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
-    ]);
-
-    $produk = Produk::findOrFail($id);
-
-    if ($request->hasFile('gambar')) {
-        $file = $request->file('gambar');
-        $nama_gambar = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('images'), $nama_gambar);
-        
-        if ($produk->gambar && file_exists(public_path('images/' . $produk->gambar))) {
-            unlink(public_path('images/' . $produk->gambar));
+        $nama_gambar = null;
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $nama_gambar = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $nama_gambar); 
         }
-        
-        $produk->gambar = $nama_gambar;
-    }
 
-    $produk->nama = $request->nama;
-    $produk->harga = $request->harga;
-    $produk->deskripsi = $request->deskripsi;
-    $produk->save();
+        Produk::create([
+            'nama' => $request->nama,
+            'harga' => $request->harga,
+            'deskripsi' => $request->deskripsi,
+            'gambar' => $nama_gambar,
+        ]);
 
-    return redirect('/produk');
+        return redirect('/produk');
+    });
+
+    Route::delete('/produk/{id}', function ($id) {
+        $produk = Produk::findOrFail($id);
+        $produk->delete();
+        return redirect('/produk');
+    });
+
+    Route::get('/produk/{id}/edit', function ($id) {
+        $produk = Produk::findOrFail($id);
+        return view('edit_produk', ['produk' => $produk]);
+    });
+
+    Route::put('/produk/{id}', function (Request $request, $id) {
+        $request->validate([
+            'nama' => 'required',
+            'harga' => 'required|numeric',
+            'deskripsi' => 'nullable',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+        ]);
+
+        $produk = Produk::findOrFail($id);
+
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $nama_gambar = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images'), $nama_gambar);
+            
+            if ($produk->gambar && file_exists(public_path('images/' . $produk->gambar))) {
+                unlink(public_path('images/' . $produk->gambar));
+            }
+            
+            $produk->gambar = $nama_gambar;
+        }
+
+        $produk->nama = $request->nama;
+        $produk->harga = $request->harga;
+        $produk->deskripsi = $request->deskripsi;
+        $produk->save();
+
+        return redirect('/produk');
+    });
 });
 
+require __DIR__.'/auth.php';
