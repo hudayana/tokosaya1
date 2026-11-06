@@ -22,7 +22,6 @@
 
         <!-- FORM PENCARIAN & FILTER -->
         <form action="/produk" method="GET" class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row gap-3">
-            <!-- Input Search -->
             <div class="relative flex-grow">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari nama produk..." class="w-full px-4 py-2 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -30,7 +29,6 @@
                 </svg>
             </div>
 
-            <!-- Dropdown Kategori -->
             <select name="kategori" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-white sm:w-48">
                 <option value="">Semua Kategori</option>
                 @foreach($semua_kategori as $k)
@@ -40,7 +38,6 @@
                 @endforeach
             </select>
 
-            <!-- Tombol Cari & Reset -->
             <div class="flex gap-2">
                 <button type="submit" class="bg-gray-800 hover:bg-gray-900 text-white font-semibold py-2 px-6 rounded-lg transition">
                     Cari
@@ -59,10 +56,10 @@
         @forelse($semua_produk as $p)
             <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col">
                 
-                <!-- Bagian Gambar -->
-                <div class="relative h-56 w-full bg-gray-100">
+                <!-- Bagian Gambar (Bisa Diklik) -->
+                <a href="{{ route('produk.detail', $p->id) }}" class="relative h-56 w-full bg-gray-100 block overflow-hidden group">
                     @if($p->gambar)
-                        <img src="{{ asset('images/' . $p->gambar) }}" alt="{{ $p->nama }}" class="w-full h-full object-cover">
+                        <img src="{{ asset('images/' . $p->gambar) }}" alt="{{ $p->nama }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                     @else
                         <div class="flex items-center justify-center w-full h-full text-gray-400">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -70,11 +67,13 @@
                             </svg>
                         </div>
                     @endif
-                </div>
+                </a>
 
                 <!-- Bagian Konten -->
                 <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-gray-800 mb-1">{{ $p->nama }}</h3>
+                    <a href="{{ route('produk.detail', $p->id) }}" class="hover:text-blue-600 transition">
+                        <h3 class="text-lg font-bold text-gray-800 mb-1">{{ $p->nama }}</h3>
+                    </a>
                     @if($p->kategori)
                         <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded mb-2 w-max">
                             {{ $p->kategori->nama_kategori }}

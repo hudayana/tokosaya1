@@ -40,6 +40,10 @@ Route::get('/produk', function (Request $request) {
     ]);
 });
 
+    Route::get('/produk/{id}', function ($id) {
+    $produk = Produk::findOrFail($id);
+    return view('detail_produk', ['produk' => $produk]);
+})->name('produk.detail');
 
 // --- ROUTE KERANJANG BELANJA (Bisa diakses publik) ---
 Route::get('/keranjang', function () {
