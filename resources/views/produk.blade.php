@@ -36,7 +36,12 @@
 
                 <!-- Bagian Konten -->
                 <div class="p-6 flex flex-col flex-grow">
-                    <h3 class="text-lg font-bold text-gray-800 mb-2">{{ $p->nama }}</h3>
+                    <h3 class="text-lg font-bold text-gray-800 mb-1">{{ $p->nama }}</h3>
+@if($p->kategori)
+    <span class="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded mb-2">
+        {{ $p->kategori->nama_kategori }}
+    </span>
+@endif
                     <p class="text-sm text-gray-500 mb-4 flex-grow line-clamp-2">{{ $p->deskripsi }}</p>
                     <div class="text-xl font-extrabold text-blue-600 mb-4">
                         Rp {{ number_format($p->harga, 0, ',', '.') }}

@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Models\Produk;
+use App\Models\Kategori;
 use Illuminate\Http\Request;
 
 // --- ROUTE PUBLIK (Bisa diakses tanpa login) ---
@@ -35,18 +36,22 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // --- ROUTE TOKO SAYA (CRUD) ---
+    // --- ROUTE PRODUK (CRUD) ---
     
+    // 1. Tampilkan Form Tambah Produk (Kirim data kategori)
     Route::get('/produk/tambah', function () {
-        return view('tambah_produk');
+        $semua_kategori = Kategori::all(); 
+        return view('tambah_produk', ['semua_kategori' => $semua_kategori]);
     });
 
+    // 2. Proses Simpan Produk Baru
     Route::post('/produk/simpan', function (Request $request) {
         $request->validate([
             'nama' => 'required',
             'harga' => 'required|numeric',
             'deskripsi' => 'nullable',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048' 
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'kategori_id' => 'nullable|exists:kategoris,id' 
         ]);
 
         $nama_gambar = null;
@@ -61,28 +66,34 @@ Route::middleware('auth')->group(function () {
             'harga' => $request->harga,
             'deskripsi' => $request->deskripsi,
             'gambar' => $nama_gambar,
+            'kategori_id' => $request->kategori_id, 
         ]);
 
         return redirect('/produk');
     });
 
+    // 3. Hapus Produk
     Route::delete('/produk/{id}', function ($id) {
         $produk = Produk::findOrFail($id);
         $produk->delete();
         return redirect('/produk');
     });
 
+    // 4. Tampilkan Form Edit Produk (Kirim data produk & kategori)
     Route::get('/produk/{id}/edit', function ($id) {
         $produk = Produk::findOrFail($id);
-        return view('edit_produk', ['produk' => $produk]);
+        $semua_kategori = Kategori::all(); 
+        return view('edit_produk', ['produk' => $produk, 'semua_kategori' => $semua_kategori]);
     });
 
+    // 5. Proses Update Produk
     Route::put('/produk/{id}', function (Request $request, $id) {
         $request->validate([
             'nama' => 'required',
             'harga' => 'required|numeric',
             'deskripsi' => 'nullable',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'kategori_id' => 'nullable|exists:kategoris,id' 
         ]);
 
         $produk = Produk::findOrFail($id);
@@ -102,9 +113,35 @@ Route::middleware('auth')->group(function () {
         $produk->nama = $request->nama;
         $produk->harga = $request->harga;
         $produk->deskripsi = $request->deskripsi;
+        $produk->kategori_id = $request->kategori_id; 
         $produk->save();
 
         return redirect('/produk');
+    });
+
+    // --- ROUTE KATEGORI ---
+    
+    Route::get('/kategori', function () {
+        $semua_kategori = Kategori::all();
+        return view('kategori.index', ['semua_kategori' => $semua_kategori]);
+    });
+
+    Route::post('/kategori/simpan', function (Request $request) {
+        $request->validate([
+            'nama_kategori' => 'required'
+        ]);
+
+        Kategori::create([
+            'nama_kategori' => $request->nama_kategori
+        ]);
+
+        return redirect('/kategori');
+    });
+
+    Route::delete('/kategori/{id}', function ($id) {
+        $kategori = Kategori::findOrFail($id);
+        $kategori->delete();
+        return redirect('/kategori');
     });
 });
 
