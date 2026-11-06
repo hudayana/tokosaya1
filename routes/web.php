@@ -58,6 +58,22 @@ Route::get('/produk', function () {
         return redirect()->back()->with('success', 'Produk dihapus dari keranjang.');
     })->name('keranjang.hapus');
 
+        Route::post('/keranjang/update/{id}', function (Request $request, $id) {
+        $keranjang = session()->get('keranjang', []);
+        
+        if(isset($keranjang[$id])) {
+            // Pastikan quantity minimal 1
+            if ($request->action == 'tambah') {
+                $keranjang[$id]['quantity']++;
+            } elseif ($request->action == 'kurang' && $keranjang[$id]['quantity'] > 1) {
+                $keranjang[$id]['quantity']--;
+            }
+            session()->put('keranjang', $keranjang);
+        }
+        
+        return redirect()->route('keranjang.index');
+    })->name('keranjang.update');
+
 // --- ROUTE ADMIN (Wajib Login) ---
 
 Route::middleware('auth')->group(function () {

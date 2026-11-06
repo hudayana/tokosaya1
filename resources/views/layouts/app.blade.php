@@ -24,9 +24,17 @@
                     <a href="/tentang" class="text-gray-600 hover:text-blue-600 font-medium transition">Tentang Kami</a>
                     <a href="/produk" class="text-gray-600 hover:text-blue-600 font-medium transition">Produk</a>
                     
-                    <!-- MENU KERANJANG DITAMBAHKAN DI SINI -->
-                    <a href="{{ route('keranjang.index') }}" class="text-gray-600 hover:text-blue-600 font-medium transition">Keranjang</a>
+                    <!-- MENU KERANJANG DENGAN BADGE NOTIFIKASI -->
+                    <a href="{{ route('keranjang.index') }}" class="text-gray-600 hover:text-blue-600 font-medium transition relative flex items-center gap-1">
+                        Keranjang
+                        @if(session('keranjang') && count(session('keranjang')) > 0)
+                            <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                                {{ count(session('keranjang')) }}
+                            </span>
+                        @endif
+                    </a>
                     
+                    <!-- BLOK AUTENTIKASI (LOGIN/LOGOUT) -->
                     @auth
                         <!-- Tampil jika sudah login -->
                         <a href="/dashboard" class="text-gray-600 hover:text-blue-600 font-medium transition">Dashboard</a>
