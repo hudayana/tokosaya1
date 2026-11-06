@@ -24,6 +24,9 @@
                     <a href="/tentang" class="text-gray-600 hover:text-blue-600 font-medium transition">Tentang Kami</a>
                     <a href="/produk" class="text-gray-600 hover:text-blue-600 font-medium transition">Produk</a>
                     
+                    <!-- MENU KERANJANG DITAMBAHKAN DI SINI -->
+                    <a href="{{ route('keranjang.index') }}" class="text-gray-600 hover:text-blue-600 font-medium transition">Keranjang</a>
+                    
                     @auth
                         <!-- Tampil jika sudah login -->
                         <a href="/dashboard" class="text-gray-600 hover:text-blue-600 font-medium transition">Dashboard</a>

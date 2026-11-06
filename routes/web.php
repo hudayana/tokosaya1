@@ -22,6 +22,42 @@ Route::get('/produk', function () {
 });
 
 
+    // --- ROUTE KERANJANG BELANJA ---
+    Route::get('/keranjang', function () {
+        $keranjang = session()->get('keranjang', []);
+        return view('keranjang.index', ['keranjang' => $keranjang]);
+    })->name('keranjang.index');
+
+    Route::post('/keranjang/tambah/{id}', function ($id) {
+        $produk = Produk::findOrFail($id);
+        $keranjang = session()->get('keranjang', []);
+
+        // Jika produk sudah ada di keranjang, tambah quantity
+        if (isset($keranjang[$id])) {
+            $keranjang[$id]['quantity']++;
+        } else {
+            // Jika belum ada, buat item baru
+            $keranjang[$id] = [
+                "nama" => $produk->nama,
+                "harga" => $produk->harga,
+                "quantity" => 1,
+                "gambar" => $produk->gambar
+            ];
+        }
+
+        session()->put('keranjang', $keranjang);
+        return redirect()->back()->with('success', 'Produk berhasil ditambahkan ke keranjang!');
+    })->name('keranjang.tambah');
+
+    Route::delete('/keranjang/hapus/{id}', function ($id) {
+        $keranjang = session()->get('keranjang', []);
+        if (isset($keranjang[$id])) {
+            unset($keranjang[$id]);
+            session()->put('keranjang', $keranjang);
+        }
+        return redirect()->back()->with('success', 'Produk dihapus dari keranjang.');
+    })->name('keranjang.hapus');
+
 // --- ROUTE ADMIN (Wajib Login) ---
 
 Route::middleware('auth')->group(function () {
