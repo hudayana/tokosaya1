@@ -34,7 +34,7 @@
                         @endif
                     </a>
                     
-                    <!-- BLOK AUTENTIKASI (LOGIN/LOGOUT) -->
+                    <!-- BLOK AUTENTIKASI -->
                     @auth
                         <!-- Tampil jika sudah login -->
                         <a href="/dashboard" class="text-gray-600 hover:text-blue-600 font-medium transition">Dashboard</a>
@@ -45,7 +45,7 @@
                     @else
                         <!-- Tampil jika belum login -->
                         <a href="{{ route('login') }}" class="text-gray-600 hover:text-blue-600 font-medium transition">Login</a>
-                        <a href="{{ route('register') }}" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Register</a>
+                        <!-- Tombol Register sudah dihapus sesuai instruksi sebelumnya -->
                     @endauth
                 </div>
             </div>

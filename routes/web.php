@@ -197,4 +197,9 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+// Blokir akses register publik
+Route::get('/register', function () {
+    return redirect('/login');
+})->name('register');
+
 require __DIR__.'/auth.php';
