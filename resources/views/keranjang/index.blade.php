@@ -17,9 +17,9 @@
                 
                 <!-- Kolom Kiri: Daftar Produk -->
                 <div class="lg:col-span-2 space-y-4">
-                    @php $total = 0; @endphp
+                    
                     @foreach($keranjang as $id => $item)
-                        @php $total += $item['harga'] * $item['quantity']; @endphp
+                       
                         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col sm:flex-row items-center gap-4 relative">
                             
                             <!-- Gambar Produk -->
