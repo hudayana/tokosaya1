@@ -34,7 +34,8 @@ Aplikasi e-commerce sederhana yang dibangun dengan **Laravel**. Proyek ini dibua
 ## 🔑 Akun Testing (Seeder)
 
 Gunakan akun ini untuk mencoba fitur:
-
+Link Website Saya
+https://tokosaya1-production.up.railway.app/
 **Admin:**
 - Email: `admin@tokosaya.com`
 - Password: `password123`
