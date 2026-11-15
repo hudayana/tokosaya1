@@ -42,10 +42,7 @@
         <!-- Dropdown Role (Dipindahkan ke sini agar rapi) -->
         <div class="mt-4">
             <label for="role" class="block font-medium text-sm text-gray-700">Daftar Sebagai</label>
-            <select name="role" id="role" class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm block mt-1 w-full" required>
-                <option value="pembeli">Pembeli</option>
-                <option value="admin">Admin Toko</option>
-            </select>
+            
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>
 
