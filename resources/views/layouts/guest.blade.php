@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        @if (request()->routeIs('login'))
+        @if (request()->routeIs('login', 'register'))
             <div class="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 lg:flex lg:items-center lg:justify-center lg:p-10">
                 {{ $slot }}
             </div>
