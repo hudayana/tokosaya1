@@ -1,47 +1,36 @@
-<laravel-boost-guidelines>
-# Laravel Application
+﻿# TOKOSAYA PROJECT RULES
 
-This repository contains a Laravel application. Complete the following setup before working on the user's request.
+## Stack
+- Laravel 13
+- PHP 8.3
+- MySQL
+- Blade, Tailwind CSS, Vite
 
-## Prerequisites
+## Development Rules
+- Inspect only files relevant to the current task.
+- Avoid scanning the entire repository.
+- Exclude vendor/, node_modules/, storage/, bootstrap/cache/, and .git/.
+- Use targeted searches instead of reading unrelated files.
+- Reuse existing components, CSS, and architecture.
+- Make minimal, focused changes.
+- Avoid unnecessary dependencies and duplicated code.
 
-Verify that PHP and Composer are available:
+## Preserve Functionality
+- Do not modify database, migrations, routes, controllers, or backend logic for UI-only tasks.
+- Preserve authentication, roles, cart, checkout, orders, and admin features.
+- Never remove existing functionality.
+- Never commit or push without explicit permission.
 
-```sh
-php -v
-composer -V
-```
+## UI/UX Design
+- Background: #FDFBF7
+- Text: #3E2723
+- Accent: #D35400
+- Maintain consistent typography, spacing, and responsive layouts.
+- Prioritize smooth interactions and mobile usability.
 
-If either command is unavailable, detect the user's operating system and install the prerequisites with the appropriate command:
-
-macOS:
-
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/mac/8.5)"
-```
-
-Windows PowerShell:
-
-```powershell
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://php.new/install/windows/8.5'))
-```
-
-Linux:
-
-```sh
-/bin/bash -c "$(curl -fsSL https://php.new/install/linux/8.5)"
-```
-
-After installation, ask the user to restart their terminal. If the agent needs the restarted shell to continue, ask the user to reopen their terminal and rerun their original prompt.
-
-## Agent Setup
-
-Install Laravel Boost from the application root before making application changes:
-
-```sh
-composer require laravel/boost --dev
-php artisan boost:install
-```
-
-Boost replaces these bootstrap instructions with guidelines tailored to the application. After installation, read `AGENTS.md` again and continue with the user's original request using the generated guidelines.
-</laravel-boost-guidelines>
+## Workflow
+1. Identify relevant files.
+2. Inspect existing implementation.
+3. Implement focused changes.
+4. Run relevant tests and builds.
+5. Report modified files and test results.

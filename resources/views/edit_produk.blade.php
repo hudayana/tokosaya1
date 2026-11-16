@@ -5,8 +5,8 @@
 @section('content')
 <div class="max-w-2xl mx-auto">
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="bg-yellow-400 px-6 py-4">
-            <h2 class="text-xl font-bold text-yellow-900">Edit Produk</h2>
+        <div class="bg-terracotta-600 px-6 py-4">
+            <h2 class="text-xl font-bold text-white">Edit Produk</h2>
         </div>
         
         <div class="p-8">

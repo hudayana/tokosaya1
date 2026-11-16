@@ -22,7 +22,7 @@
                     <strong>Perhatian:</strong> Ini adalah QRIS simulasi untuk keperluan portofolio. Jangan melakukan transfer sungguhan.
                 </div>
 
-                <a href="/checkout/sukses" class="w-full block bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-md transition duration-300">
+                <a href="/checkout/sukses" class="w-full block bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 rounded-xl shadow-md transition duration-300">
                     Saya Sudah Membayar
                 </a>
             </div>

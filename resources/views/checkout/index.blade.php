@@ -73,7 +73,7 @@
                         <span class="text-2xl font-extrabold text-blue-600">Rp {{ number_format($total, 0, ',', '.') }}</span>
                     </div>
 
-                    <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl shadow-md transition duration-300">
+                    <button type="submit" class="w-full bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 rounded-xl shadow-md transition duration-300">
                         Buat Pesanan Sekarang
                     </button>
                 </div>

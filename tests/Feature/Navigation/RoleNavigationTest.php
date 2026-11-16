@@ -18,16 +18,17 @@ class RoleNavigationTest extends TestCase
 
         $response
             ->assertOk()
-            ->assertSee('Dashboard Admin')
-            ->assertSee('Manajemen Produk')
-            ->assertSee('Manajemen Pesanan')
+            ->assertSee('Dashboard')
+            ->assertSee('Produk')
+            ->assertSee('Kategori')
+            ->assertSee('Pesanan')
             ->assertDontSee('Keranjang')
             ->assertDontSee('Riwayat Pesanan');
 
         $html = $response->getContent();
-        $this->assertSame(2, substr_count($html, 'Dashboard Admin'));
-        $this->assertSame(2, substr_count($html, 'Manajemen Produk'));
-        $this->assertSame(2, substr_count($html, 'Manajemen Pesanan'));
+        $this->assertSame(2, substr_count($html, 'href="'.route('dashboard').'"'));
+        $this->assertSame(2, substr_count($html, 'href="/kategori"'));
+        $this->assertSame(2, substr_count($html, 'href="'.route('admin.pesanan').'"'));
         $this->assertSame(0, substr_count($html, 'href="'.route('keranjang.index').'"'));
         $this->assertSame(0, substr_count($html, 'href="'.route('pesanan.riwayat').'"'));
         $this->assertSame(2, substr_count($html, 'href="'.route('profile.edit').'"'));
@@ -43,10 +44,10 @@ class RoleNavigationTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Keranjang')
-            ->assertSee('Riwayat Pesanan')
-            ->assertDontSee('Dashboard Admin')
-            ->assertDontSee('Manajemen Produk')
-            ->assertDontSee('Manajemen Pesanan');
+            ->assertSee('Pesanan')
+            ->assertDontSee('Dashboard')
+            ->assertDontSee('Kategori')
+            ->assertDontSee('href="'.route('admin.pesanan').'"');
 
         $html = $response->getContent();
         $this->assertSame(2, substr_count($html, 'href="'.route('keranjang.index').'"'));
@@ -62,15 +63,16 @@ class RoleNavigationTest extends TestCase
         $response
             ->assertOk()
             ->assertSee('Keranjang')
-            ->assertSee('Login')
-            ->assertDontSee('Dashboard Admin')
-            ->assertDontSee('Riwayat Pesanan')
+            ->assertSee('Masuk')
+            ->assertDontSee('Dashboard')
+            ->assertDontSee('Kategori')
             ->assertDontSee('Profil')
-            ->assertDontSee('Logout');
+            ->assertDontSee('Keluar');
 
         $html = $response->getContent();
         $this->assertSame(2, substr_count($html, 'href="'.route('keranjang.index').'"'));
         $this->assertSame(0, substr_count($html, 'href="'.route('profile.edit').'"'));
+        $this->assertSame(0, substr_count($html, 'href="'.route('pesanan.riwayat').'"'));
         $this->assertSame(0, substr_count($html, 'action="'.route('logout').'"'));
     }
 }

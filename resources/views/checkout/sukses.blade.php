@@ -12,7 +12,7 @@
             </div>
             <h1 class="text-3xl font-bold text-gray-800 mb-4">Pesanan Berhasil!</h1>
             <p class="text-gray-500 mb-8">Terima kasih telah berbelanja di Toko Saya. Pesanan Anda sedang diproses.</p>
-            <a href="/produk" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition duration-300">
+            <a href="/produk" class="inline-block bg-terracotta-600 hover:bg-terracotta-700 text-white font-bold py-3 px-8 rounded-xl shadow-md transition duration-300">
                 Kembali ke Katalog
             </a>
         </div>

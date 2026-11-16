@@ -93,21 +93,22 @@ class RiwayatPesananTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertDontSee('Riwayat Pesanan');
+            ->assertDontSee('href="'.route('pesanan.riwayat').'"');
     }
 
     public function test_only_logged_in_buyers_see_order_history_navigation(): void
     {
         $buyer = User::factory()->create(['role' => 'pembeli']);
 
-        $this->get('/')->assertDontSee('Riwayat Pesanan');
+        $this->get('/')
+            ->assertDontSee('href="'.route('pesanan.riwayat').'"');
 
         $response = $this->actingAs($buyer)
             ->get('/');
 
         $response
             ->assertOk()
-            ->assertSee('Riwayat Pesanan');
+            ->assertSee(route('pesanan.riwayat'));
         $this->assertSame(2, substr_count($response->getContent(), route('pesanan.riwayat')));
     }
 
