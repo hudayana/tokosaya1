@@ -8,6 +8,40 @@
 
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
             <h1 class="text-2xl font-bold text-gray-800 mb-4">Detail Pesanan #{{ $pesanan->id }}</h1>
+
+            @if(session('success'))
+                <div role="status" class="mb-4 rounded-lg bg-green-50 p-4 text-sm text-green-800">{{ session('success') }}</div>
+            @endif
+            @if($errors->any())
+                <div role="alert" class="mb-4 rounded-lg bg-red-50 p-4 text-sm text-red-800">
+                    <p class="font-semibold">Status pesanan gagal diperbarui.</p>
+                    <ul class="mt-1 list-inside list-disc">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            <div class="mb-6 flex flex-col gap-3 rounded-xl bg-gray-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="mb-1 text-sm text-gray-500">Status Pesanan Saat Ini</p>
+                    <x-status-pesanan :status="$pesanan->status" />
+                </div>
+                <form method="POST" action="{{ route('admin.pesanan.update', $pesanan->id) }}" class="flex flex-col gap-2 sm:flex-row sm:items-end">
+                    @csrf
+                    @method('PUT')
+                    <div>
+                        <label for="status" class="mb-1 block text-sm font-medium text-gray-700">Ubah Status</label>
+                        <select id="status" name="status" required class="w-full rounded-lg border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                            @foreach(['pending' => 'Pending', 'diproses' => 'Diproses', 'dikirim' => 'Dikirim', 'selesai' => 'Selesai', 'dibatalkan' => 'Dibatalkan'] as $value => $label)
+                                <option value="{{ $value }}" @selected(old('status', $pesanan->status) === $value)>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700">Simpan Perubahan</button>
+                </form>
+            </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 border-b border-gray-100 pb-6">
                 <div>

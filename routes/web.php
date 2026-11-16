@@ -6,6 +6,7 @@ use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KeranjangController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\PesananController;
+use App\Http\Controllers\RiwayatPesananController;
 use Illuminate\Support\Facades\Route;
 
 // --- ROUTE PUBLIK (Bisa diakses tanpa login) ---
@@ -59,6 +60,7 @@ Route::middleware('auth')->group(function () {
         // Manajemen Pesanan (Admin)
         Route::get('/admin/pesanan', [PesananController::class, 'index'])->name('admin.pesanan');
         Route::get('/admin/pesanan/{id}', [PesananController::class, 'show'])->name('admin.pesanan.detail');
+        Route::put('/admin/pesanan/{id}', [PesananController::class, 'update'])->name('admin.pesanan.update');
     });
 
     // --- ROUTE CHECKOUT & PEMBAYARAN ---
@@ -67,6 +69,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/checkout/qris', [CheckoutController::class, 'qris'])->name('checkout.qris');
     Route::get('/checkout/sukses', [CheckoutController::class, 'sukses'])->name('checkout.sukses');
 
+    // Riwayat Pesanan (Pembeli)
+    Route::get('/riwayat-pesanan', [RiwayatPesananController::class, 'index'])->name('pesanan.riwayat');
+    Route::get('/riwayat-pesanan/{id}', [RiwayatPesananController::class, 'show'])->whereNumber('id')->name('pesanan.detail');
 });
 
 // 🔥 KUNCI PERBAIKANNYA DI SINI 🔥
